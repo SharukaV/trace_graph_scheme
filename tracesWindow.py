@@ -1,13 +1,13 @@
 from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QVariant, QByteArray, QModelIndex, QStringListModel, QSortFilterProxyModel, QSettings
 from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QMainWindow
-from PyQt5.QtWidgets import QWidget, QComboBox, QStyledItemDelegate, QItemDelegate, QStyleOptionComboBox, QStyle
+from PyQt5.QtWidgets import QMainWindow, QWidget, QTableView
+from PyQt5.QtWidgets import QComboBox, QStyledItemDelegate, QItemDelegate, QStyleOptionComboBox, QStyle
 
 # Дизайн окна создается в QDesigner и конвертируется из .ui в _ui.py утилитой pyuic5
 from tracesWindow_ui import Ui_TracesWindow
 
-from common import Application
+from common import Application, velocityCaption
 import HierarchicalHeaderView
 import tracesModel
 
@@ -17,8 +17,7 @@ class ComboBoxDelegate(QtWidgets.QItemDelegate):
     def __init__(self, parent=None):
         super(ComboBoxDelegate, self).__init__(parent)
         self.velocityData = QStringListModel(self)
-        self.velocityData.setStringList(('STM-1', 'STM-4', 'STM-16', 'STM-64',
-                                          'E1','E2','E3','E4','Оцк','Ethernet'))
+        self.velocityData.setStringList(velocityCaption)
 
     def setEditorData(self, editor, index):
         editor.blockSignals(True)

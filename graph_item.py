@@ -2,6 +2,7 @@ import math
 
 from PyQt5.QtCore import QVariant, pyqtSignal
 
+import common
 from common import *
 
 
@@ -161,18 +162,26 @@ class Channel(jsonSerializationMixin):
         elif column == 4:
             self.traceDescription = value
         elif column == 5:
-            self.velocity = value
+            if isinstance(value, str):
+                try:
+                    self.velocity = list(common.velocityCaption).index(value)
+                except:
+                     self.velocity = 0
+            else:
+            # if idx < 0 or idx >= len(common.velocityCaption):
+            #     self.velocity = 0
+                self.velocity = value
         elif column == 6:
-            self.grades[0] = value
+            self.grades[0] = fromVariantTime(value)
             self.isConfigured = True
         elif column == 7:
-            self.grades[1] = value
+            self.grades[1] = fromVariantTime(value)
             self.isConfigured = True
         elif column == 8:
-            self.grades[2] = value
+            self.grades[2] = fromVariantTime(value)
             self.isConfigured = True
         elif column == 9:
-            self.rate = value
+            self.rate = fromVariantTime(value)
         return True
 
     def updateWarning(self, time):

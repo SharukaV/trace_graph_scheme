@@ -1,4 +1,6 @@
-import enum
+import enum, datetime
+# from dateutil import parser as dtparser
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QTime
@@ -24,6 +26,7 @@ class WarningLevel(enum.IntEnum):
         obj.colorName = colorName
         return obj
 
+velocityCaption = ('STM-1', 'STM-4', 'STM-16', 'STM-64','E1','E2','E3','E4','Оцк','Ethernet')
 
 class Headers:
     horizontalHeaderModel = QtGui.QStandardItemModel()
@@ -55,6 +58,7 @@ class Headers:
     def columnCount():
         return Headers.horizontalHeaderModel.columnCount() + 3
 
+
 class Application(QtWidgets.QApplication):
     """
     Расширение класса приложения Qt
@@ -63,11 +67,11 @@ class Application(QtWidgets.QApplication):
 
     applicationClockChanged = pyqtSignal(QtCore.QTime)
 
-    #Настройки сораняемые между запусками
+    # Настройки сораняемые между запусками
     settings = QtCore.QSettings('config.ini', QtCore.QSettings.IniFormat)
-    #Внутренние часы программы
+    # Внутренние часы программы
     app_datetime = QtCore.QDateTime.fromMSecsSinceEpoch(0, QtCore.Qt.UTC)
-    #Монотонный таймер для обновления внутренних часов, для устранения погрешности
+    # Монотонный таймер для обновления внутренних часов, для устранения погрешности
     uptime = QtCore.QElapsedTimer()
     uptime.start()
 
@@ -115,3 +119,16 @@ class ApplicationClock(QtWidgets.QLCDNumber):
         dialog.exec()
 
         Application.instance().setClock(timeInput.time())
+
+
+def fromVariantTime(data):
+    time = data
+    if not isinstance(time, QTime):
+        # dt = dtparser.parse(data)
+        # time = QTime(dt.time())
+        time = QTime.fromString(data, 'hh:mm')
+        if not time.isValid() or time.isNull():
+            time = QTime.fromString(data, 'hh,mm')
+        if not time.isValid() or time.isNull():
+            time = QTime(0,0)
+    return time

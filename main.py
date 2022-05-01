@@ -318,11 +318,13 @@ class MainWindow(QtWidgets.QMainWindow):
         if name is None:
             fileName = QtWidgets.QFileDialog.getOpenFileName()
         if fileName[0]:
-            file = open(fileName[0], 'rt')
-            self.scene.clear()
-            self.scene.json_deserialize(file)
-            self.scene.update()
-            file.close()
+            try:
+                file = open(fileName[0], 'rt')
+                self.scene.clear()
+                self.scene.json_deserialize(file)
+                self.scene.update()
+            finally:
+                file.close()
 
     def saveSchema(self, state=False, name=None):
         """Сохранить схему в файл"""
@@ -330,10 +332,12 @@ class MainWindow(QtWidgets.QMainWindow):
         if name is None:
             fileName = QtWidgets.QFileDialog.getSaveFileName(self, '', 'schema.json')
         if fileName[0]:
-            file = open(fileName[0], 'wt')
-            # pickle не работает с QObject :(
-            self.scene.json_serialize(file)
-            file.close()
+            try:
+                file = open(fileName[0], 'wt')
+                # pickle не работает с QObject :(
+                self.scene.json_serialize(file)
+            finally:
+                file.close()
 
     def dumpSchema(self):
         """Сохранить объект схемы"""

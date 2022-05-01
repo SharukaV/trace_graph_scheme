@@ -19,7 +19,7 @@ class Ui_TracesWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.view = QtWidgets.QTableView(self.centralwidget)
+        self.view = TableView(self.centralwidget)
         self.view.setObjectName("view")
         self.horizontalLayout.addWidget(self.view)
         TracesWindow.setCentralWidget(self.centralwidget)
@@ -47,3 +47,4 @@ class Ui_TracesWindow(object):
         self.toolBar.setWindowTitle(_translate("TracesWindow", "toolBar"))
         self.createChannelAction.setText(_translate("TracesWindow", "Создать канал связи"))
         self.deleteChannelAction.setText(_translate("TracesWindow", "Удалить канал связи"))
+from tableview import TableView
