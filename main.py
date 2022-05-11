@@ -112,7 +112,9 @@ class MainWindow(QtWidgets.QMainWindow):
             trace.rootChannel.isAlarmRead = False
             for channel in trace.rootChannel.channels:
                 channel.rate = time
+                channel.isConfigured = True
             trace.rootChannel.rate = time
+            trace.rootChannel.isConfigured = True
 
         self.tracesWindow.model.resetColumn(9)
         self.channelWindow.model.resetColumn(9)
@@ -129,11 +131,11 @@ class MainWindow(QtWidgets.QMainWindow):
             # Апдейтить и обработать алармы каналов трассы
             for subchannel in trace.rootChannel.channels:
                 updated = subchannel.updateWarning(Application.app_datetime.time())
+                if subchannel.warningLevel.value > commonWarning.value:
+                    commonWarning = subchannel.warningLevel
                 if updated:
                     level = subchannel.warningLevel
-                    if level > commonWarning:
-                        commonWarning = level
-                    if level > WarningLevel.Passed:
+                    if level.value > WarningLevel.Passed.value:
                         self.alarmWindow.logEvent(level,
                                                   str(subchannel),
                                                   f'{subchannel.direction} {subchannel.traceDescription}')
@@ -141,17 +143,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
             #Апдейтить и обработать алармы трассы
             updated = trace.rootChannel.updateWarning(Application.app_datetime.time())
-            if updated or commonWarning.value > trace.rootChannel.warningLevel.value:
-                if commonWarning.value > trace.rootChannel.warningLevel.value:
-                    trace.rootChannel.warningLevel = commonWarning
-                for link in trace.links:
-                    link.myColor = trace.rootChannel.warningLevel.color
-
+            if updated:
                 if trace.rootChannel.warningLevel.value > WarningLevel.Passed.value:
                     self.alarmWindow.logEvent(trace.rootChannel.warningLevel,
                                               str(trace.rootChannel),
                                               f'{trace.rootChannel.direction} {trace.rootChannel.traceDescription}')
                     needUpdate = True
+
+            if commonWarning.value > trace.rootChannel.warningLevel.value:
+                trace.rootChannel.warningLevel = commonWarning
 
             for link in trace.links:
                 if not trace.rootChannel.isAlarmRead \

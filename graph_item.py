@@ -189,18 +189,17 @@ class Channel(jsonSerializationMixin):
         oldLevel = self.warningLevel
 
         if not self.isConfigured:
-            warningLevel = WarningLevel.Default
+            self.warningLevel = WarningLevel.Default
         elif time <= self.rate.addMSecs(self.grades[0].msecsSinceStartOfDay()):
-            warningLevel = WarningLevel.Passed
+            self.warningLevel = WarningLevel.Passed
         elif time <= self.rate.addMSecs(self.grades[1].msecsSinceStartOfDay()):
-            warningLevel = WarningLevel.Warning
+            self.warningLevel = WarningLevel.Warning
         elif time <= self.rate.addMSecs(self.grades[2].msecsSinceStartOfDay()):
-            warningLevel = WarningLevel.Error
+            self.warningLevel = WarningLevel.Error
         else:
-            warningLevel = WarningLevel.Fatal
+            self.warningLevel = WarningLevel.Fatal
 
-        if warningLevel != oldLevel:
-            self.warningLevel = warningLevel
+        if self.warningLevel.value != oldLevel.value:
             return True
         return False
 
