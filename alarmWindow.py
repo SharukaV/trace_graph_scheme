@@ -29,10 +29,7 @@ class AlarmMessageBox(QLabel):
         self.timerEvent()
 
     def timerEvent(self, *args, **kwargs):
-        if not self.blink:
-            self.setStyleSheet("background-color: yellow;")
-        else:
-            self.setStyleSheet("background-color: red;")
+        self.setStyleSheet("background-color: yellow;" if not self.blink else "background-color: red;")
         self.blink = not self.blink
 
     def mousePressEvent(self, mouseEvent):

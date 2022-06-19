@@ -44,19 +44,37 @@ class Headers:
     c611 = QtGui.QStandardItem("отл.")
     c612 = QtGui.QStandardItem("хор.")
     c613 = QtGui.QStandardItem("уд.")
-    c62 = QtGui.QStandardItem("Реал.")
+    c62 = QtGui.QStandardItem("Вр.н")
+    c63 = QtGui.QStandardItem("∀")
+
     c6.appendColumn([c61])
     c6.appendColumn([c62])
+    c6.appendColumn([c63])
     c61.appendColumn([c611])
     c61.appendColumn([c612])
     c61.appendColumn([c613])
 
     horizontalHeaderModel.setItem(0, 6, c6)
-    horizontalHeaderModel.setItem(0, 7, QtGui.QStandardItem("A"))
+
+    c7 = QtGui.QStandardItem("Рассчет КИД")
+    c71 = QtGui.QStandardItem("Данные")
+    c711 = QtGui.QStandardItem("Реал")
+    c712 = QtGui.QStandardItem("Отбой\nпо связи")
+    c713 = QtGui.QStandardItem("Время выхода\nиз строя")
+    c714 = QtGui.QStandardItem("Время\nвосстановления")
+    c72 = QtGui.QStandardItem("КИД")
+    c7.appendColumn([c71])
+    c7.appendColumn([c72])
+    c71.appendColumn([c711])
+    c71.appendColumn([c712])
+    c71.appendColumn([c713])
+    c71.appendColumn([c714])
+
+    horizontalHeaderModel.setItem(0, 7, c7)
 
     @staticmethod
     def columnCount():
-        return Headers.horizontalHeaderModel.columnCount() + 3
+        return Headers.horizontalHeaderModel.columnCount() + 4 + 4
 
 
 class Application(QtWidgets.QApplication):
