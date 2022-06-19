@@ -104,8 +104,8 @@ class MainWindow(QtWidgets.QMainWindow):
         #     self.scene.json_deserialize(file)
         #     self.scene.update()
         #     file.close()
-        # except:
-        #     pass
+        # finally:
+        #     file.close()
 
     def clockSetted(self, time):
         for trace in self.scene.traces:

@@ -123,4 +123,8 @@ class TraceModel(QAbstractItemModel):
     def flags(self, index):
         if not index.isValid():
             super(TraceModel, self).flags(index)
+
+        if index.column() == 10 or index.column() == 15:
+            return super(TraceModel, self).flags(index)
+
         return Qt.ItemIsEditable | super(TraceModel, self).flags(index)

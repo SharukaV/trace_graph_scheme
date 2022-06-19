@@ -4,6 +4,7 @@ from PyQt5.QtCore import QVariant, pyqtSignal
 
 import common
 from common import *
+from calculation import calculateKID
 
 
 class jsonSerializationMixin:
@@ -51,10 +52,14 @@ class Channel(jsonSerializationMixin):
         item.numberZT = json["numberZT"]
         item.velocity = json["velocity"]
         item.SHT = json["SHT"]
+
         item.rate = QtCore.QTime.fromMSecsSinceStartOfDay(json["rate"])
         grades = json["grades"]
         for i in range(len(grades)):
             item.grades[i] = QtCore.QTime.fromMSecsSinceStartOfDay(grades[i])
+        time_data = json["time_data"]
+        for i in range(len(time_data)):
+            item.timeData[i] = QtCore.QTime.fromMSecsSinceStartOfDay(time_data[i])
         for channelJson in json["channels"]:
             channel = Channel.fromJSON(channelJson, item)
             item.channels.append(channel)
@@ -80,8 +85,10 @@ class Channel(jsonSerializationMixin):
         #Три нормативных времени, хранятся в Qt формате для упрощения отображения в таблице
         #TODO стоит переделать на python datetime
         self.grades = [QtCore.QTime.fromMSecsSinceStartOfDay(0)]*3
-        #Затраченное время
+        #Затраченное время (теперь столбец 9 'Вр.н')
         self.rate = Application.app_datetime.time()
+        #Столбцы времени для рассчета формулы 11-14
+        self.timeData = [QtCore.QTime.fromMSecsSinceStartOfDay(0)]*4
 
         self.isConfigured = False
         self.isAlarmRead = False
@@ -118,6 +125,7 @@ class Channel(jsonSerializationMixin):
             return self.traceDescription
         elif column == 5:
             return self.velocity
+        #Столбцы оценки времени
         elif column == 6:
             return self.grades[0]
         elif column == 7:
@@ -128,6 +136,18 @@ class Channel(jsonSerializationMixin):
             return self.rate
         elif column == 10:
             return self.warningLevel.color
+        elif column == 11:
+            return self.timeData[0]
+        elif column == 12:
+            return self.timeData[1]
+        elif column == 13:
+            return self.timeData[2]
+        elif column == 14:
+            return self.timeData[3]
+        elif column == 15:
+            kid = calculateKID(self.timeData)
+            return f'{kid}%' if kid >= 0 else 'NULL'
+
         return QVariant()
 
     def insertChildren(self, position, count):
@@ -165,7 +185,7 @@ class Channel(jsonSerializationMixin):
             if isinstance(value, str):
                 try:
                     self.velocity = list(common.velocityCaption).index(value)
-                except:
+                except Exception as ex:
                      self.velocity = 0
             else:
             # if idx < 0 or idx >= len(common.velocityCaption):
@@ -182,6 +202,15 @@ class Channel(jsonSerializationMixin):
             self.isConfigured = True
         elif column == 9:
             self.rate = fromVariantTime(value)
+        elif column == 11:
+            self.timeData[0] = fromVariantTime(value)
+        elif column == 12:
+            self.timeData[1] = fromVariantTime(value)
+        elif column == 13:
+            self.timeData[2] = fromVariantTime(value)
+        elif column == 14:
+            self.timeData[3] = fromVariantTime(value)
+
         return True
 
     def updateWarning(self, time):
@@ -213,6 +242,7 @@ class Channel(jsonSerializationMixin):
             "velocity": self.velocity,
             "SHT": self.SHT,
             "grades": [grade.msecsSinceStartOfDay() for grade in self.grades],
+            "time_data": [time.msecsSinceStartOfDay() for time in self.timeData],
             "rate": self.rate.msecsSinceStartOfDay(),
             "channels": self.channels
         })
