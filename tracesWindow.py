@@ -1,3 +1,5 @@
+import re
+
 from PyQt5 import QtGui, QtWidgets
 from PyQt5.QtCore import Qt, QVariant, QByteArray, QModelIndex, QStringListModel, QSortFilterProxyModel, QSettings
 from PyQt5.QtGui import QPainter
@@ -78,6 +80,8 @@ class TracesWindow(QMainWindow, Ui_TracesWindow):
         self.createChannelAction.triggered.connect(self.updateActions)
         self.deleteChannelAction.triggered.connect(self.updateActions)
 
+        self.calculateKIDbutton.released.connect(self.updateSummary)
+
         self.updateActions()
 
     def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
@@ -131,6 +135,18 @@ class TracesWindow(QMainWindow, Ui_TracesWindow):
 
         if (model.removeRow(index.row(), index.parent())):
             self.updateActions()
+
+    def updateSummary(self):
+        summary: int = 0
+
+        model = self.view.model()
+        for row in range(model.rowCount()):
+            kid = str(model.index(row, 15).data())
+            kidInt = re.sub('\D', '', kid)
+            if kidInt != '':
+                summary += int(kidInt)
+
+        self.summaryView.setText(f'{summary}%')
 
     def updateActions(self):
         """Изменение активных действий, в зависимости от позиции выделения таблицы"""

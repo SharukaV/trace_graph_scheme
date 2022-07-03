@@ -38,6 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tracesWindow.view.setColumnHidden(2, True)
         self.tracesWindow.view.setColumnHidden(3, True)
         self.tracesWindow.view.setColumnHidden(5, False)
+        self.tracesWindow.summaryFrame.hide()
         self.tracesWindow.resize(1000, 500)
 
         # Окно отображения каналов
@@ -48,6 +49,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.channelWindowA.view.setColumnHidden(2, False)
         self.channelWindowA.view.setColumnHidden(3, False)
         self.channelWindowA.view.setColumnHidden(5, True)
+        self.channelWindowA.summaryFrame.hide()
         self.channelWindowA.resize(1000, 500)
 
         # Окно отображения каналов
@@ -57,6 +59,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.channelWindow.view.setColumnHidden(2, False)
         self.channelWindow.view.setColumnHidden(3, False)
         self.channelWindow.view.setColumnHidden(5, True)
+
         self.channelWindow.resize(1000, 500)
 
         #Окно отображения событий изменения оценки
@@ -85,7 +88,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.widget.setLayout(layout)
 
         self.setCentralWidget(self.widget)
-        self.setWindowTitle("Graph")
+        self.setWindowTitle("ПО для дежурного по связи")
 
         # активация стартового режима
         self.pointerTypeGroup.button(3).setChecked(True)

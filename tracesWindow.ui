@@ -34,7 +34,7 @@
      <widget class="TableView" name="view"/>
     </item>
     <item>
-     <widget class="QFrame" name="frame">
+     <widget class="QFrame" name="summaryFrame">
       <property name="frameShape">
        <enum>QFrame::Box</enum>
       </property>
@@ -85,7 +85,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="totalView">
+        <widget class="QLineEdit" name="summaryView">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>

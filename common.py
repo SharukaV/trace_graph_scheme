@@ -86,7 +86,8 @@ class Application(QtWidgets.QApplication):
     applicationClockChanged = pyqtSignal(QtCore.QTime)
 
     # Настройки сораняемые между запусками
-    settings = QtCore.QSettings('config.ini', QtCore.QSettings.IniFormat)
+    # settings = QtCore.QSettings('config.ini', QtCore.QSettings.IniFormat)
+    settings = QtCore.QSettings('config.ini')
     # Внутренние часы программы
     app_datetime = QtCore.QDateTime.fromMSecsSinceEpoch(0, QtCore.Qt.UTC)
     # Монотонный таймер для обновления внутренних часов, для устранения погрешности
